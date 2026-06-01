@@ -51,7 +51,9 @@ tooltip {
 #temperature,
 #power-profiles-daemon,
 #backlight,
+#pulseaudio,
 #battery,
+#bluetooth,
 #network {
   background: rgba(255, 255, 255, 0.07);
   padding: 0 10px;
@@ -85,12 +87,29 @@ tooltip {
   color: #fef3c7;
 }
 
+#pulseaudio {
+  color: #f9a8d4;
+}
+
+#pulseaudio.muted {
+  color: #9aa4b2;
+}
+
 #battery {
   color: #b7f7d4;
 }
 
 #battery.warning:not(.charging) {
   color: #ffcf66;
+}
+
+#bluetooth {
+  color: #93c5fd;
+}
+
+#bluetooth.disabled,
+#bluetooth.off {
+  color: #9aa4b2;
 }
 
 #network {

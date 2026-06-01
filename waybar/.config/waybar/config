@@ -17,7 +17,9 @@
     "temperature",
     "power-profiles-daemon",
     "backlight",
+    "pulseaudio",
     "battery",
+    "bluetooth",
     "network",
     "custom/logout"
   ],
@@ -64,6 +66,25 @@
     "on-scroll-up": "brightnessctl --class=backlight set +5%",
     "on-scroll-down": "brightnessctl --class=backlight set 5%-"
   },
+  "pulseaudio": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "󰖁  muted",
+    "format-icons": {
+      "default": [
+        "󰕿",
+        "󰖀",
+        "󰕾"
+      ],
+      "headphone": "󰋋",
+      "headset": "󰋎",
+      "hands-free": "󰋎"
+    },
+    "tooltip-format": "{desc}",
+    "on-click": "pavucontrol",
+    "on-click-right": "pamixer --toggle-mute",
+    "on-scroll-up": "pamixer --increase 5",
+    "on-scroll-down": "pamixer --decrease 5"
+  },
   "battery": {
     "states": {
       "warning": 30,
@@ -86,6 +107,16 @@
       "󰁹"
     ],
     "tooltip-format": "{time} remaining"
+  },
+  "bluetooth": {
+    "format": "󰂯",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱  {num_connections}",
+    "format-connected-battery": "󰂱  {device_battery_percentage}%",
+    "tooltip-format": "{controller_alias}\n{controller_address}",
+    "tooltip-format-connected": "{controller_alias}\n{controller_address}\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\n{device_address}",
+    "on-click": "blueman-manager"
   },
   "network": {
     "interval": 3,
