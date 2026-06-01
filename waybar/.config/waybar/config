@@ -1,0 +1,104 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 32,
+  "margin": "0 0 0 0",
+  "spacing": 6,
+  "reload_style_on_change": true,
+  "modules-left": [
+    "hyprland/workspaces"
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "cpu",
+    "memory",
+    "temperature",
+    "power-profiles-daemon",
+    "backlight",
+    "battery",
+    "network",
+    "custom/logout"
+  ],
+  "hyprland/workspaces": {
+    "format": "{id}",
+    "sort-by": "number",
+    "persistent-workspaces": {
+      "*": 5
+    }
+  },
+  "clock": {
+    "interval": 1,
+    "format": "  {:%H:%M}",
+    "tooltip-format": "{:%Y-%m-%d  %H:%M:%S}"
+  },
+  "cpu": {
+    "interval": 2,
+    "format": "  {usage}%",
+    "tooltip": true
+  },
+  "memory": {
+    "interval": 5,
+    "format": "󰍛  {percentage}%",
+    "tooltip-format": "{used:0.1f}G used / {total:0.1f}G total"
+  },
+  "temperature": {
+    "interval": 5,
+    "critical-threshold": 85,
+    "format": "  {temperatureC}C",
+    "format-critical": "  {temperatureC}C"
+  },
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "format-icons": {
+      "performance": "󰓅",
+      "balanced": "󰾅",
+      "power-saver": "󰌪"
+    },
+    "tooltip-format": "Power profile: {profile}\nDriver: {driver}"
+  },
+  "backlight": {
+    "format": "󰃠  {percent}%",
+    "tooltip-format": "Brightness: {percent}%",
+    "on-scroll-up": "brightnessctl --class=backlight set +5%",
+    "on-scroll-down": "brightnessctl --class=backlight set 5%-"
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon}  {capacity}%",
+    "format-charging": "󰂄  {capacity}%",
+    "format-plugged": "󰚥  {capacity}%",
+    "format-full": "󰁹",
+    "format-icons": [
+      "󰁺",
+      "󰁻",
+      "󰁼",
+      "󰁽",
+      "󰁾",
+      "󰁿",
+      "󰂀",
+      "󰂁",
+      "󰂂",
+      "󰁹"
+    ],
+    "tooltip-format": "{time} remaining"
+  },
+  "network": {
+    "interval": 3,
+    "max-length": 28,
+    "format-wifi": "󰖩  {signalStrength}%",
+    "format-ethernet": "󰈀",
+    "format-linked": "󰈂",
+    "format-disconnected": "󰖪",
+    "tooltip-format-wifi": "{ifname}: {essid}\n{ipaddr}/{cidr}\nSignal: {signalStrength}%",
+    "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}",
+    "tooltip-format-disconnected": "Disconnected",
+    "on-click": "/home/minigubben/.local/bin/waybar-wifi-menu",
+    "on-click-right": "nm-connection-editor",
+    "on-click-middle": "alacritty -e nmtui"
+  }
+}

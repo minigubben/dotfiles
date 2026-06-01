@@ -1,0 +1,102 @@
+* {
+  border: none;
+  border-radius: 0;
+  font-family:
+    "BlexMono Nerd Font", "Inter", "DejaVu Sans", "Noto Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 0;
+  margin-right: 3px;
+}
+
+window#waybar {
+  background: rgba(18, 20, 24, 0.88);
+  color: #e6e8ec;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+tooltip {
+  background: #1f2329;
+  color: #f4f6f8;
+  border: 1px solid #3b424c;
+  border-radius: 6px;
+}
+
+#workspaces {
+  margin-left: 4px;
+}
+
+#workspaces button {
+  color: #aab2bf;
+  background: transparent;
+  padding: 0 9px;
+  margin: 4px 1px;
+  border-radius: 6px;
+}
+
+#workspaces button.active {
+  color: #111418;
+  background: #8bd3ff;
+}
+
+#workspaces button.urgent {
+  color: #111418;
+  background: #ffb86b;
+}
+
+#clock,
+#cpu,
+#memory,
+#temperature,
+#power-profiles-daemon,
+#backlight,
+#battery,
+#network {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 0 10px;
+  margin: 4px 0;
+  border-radius: 6px;
+}
+
+#clock {
+  color: #f4f6f8;
+}
+
+#cpu,
+#memory {
+  color: #dbeafe;
+}
+
+#temperature {
+  color: #ffd166;
+}
+
+#temperature.critical,
+#battery.critical:not(.charging) {
+  color: #ff6b6b;
+}
+
+#power-profiles-daemon {
+  color: #c4f1be;
+}
+
+#backlight {
+  color: #fef3c7;
+}
+
+#battery {
+  color: #b7f7d4;
+}
+
+#battery.warning:not(.charging) {
+  color: #ffcf66;
+}
+
+#network {
+  color: #c7d2fe;
+}
+
+#network.disconnected {
+  color: #9aa4b2;
+}
