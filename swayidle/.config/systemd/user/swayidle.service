@@ -1,0 +1,10 @@
+[Unit]
+Description=Idle manager with swaylock
+
+[Service]
+ExecStart=/usr/bin/swayidle -w timeout 300 %h/.config/sway/lock.sh timeout 600 'niri msg dpms off' resume 'niri msg dpms on' before-sleep %h/.config/sway/lock.sh
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=default.target
