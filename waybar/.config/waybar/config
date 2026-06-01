@@ -20,8 +20,7 @@
     "pulseaudio",
     "battery",
     "bluetooth",
-    "network",
-    "custom/logout"
+    "network"
   ],
   "hyprland/workspaces": {
     "format": "{id}",
@@ -128,8 +127,7 @@
     "tooltip-format-wifi": "{ifname}: {essid}\n{ipaddr}/{cidr}\nSignal: {signalStrength}%",
     "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}",
     "tooltip-format-disconnected": "Disconnected",
-    "on-click": "/home/minigubben/.local/bin/waybar-wifi-menu",
-    "on-click-right": "nm-connection-editor",
-    "on-click-middle": "alacritty -e nmtui"
+    "on-click": "nm-connection-editor",
+    "on-click-right": "alacritty -e nmtui"
   }
 }
