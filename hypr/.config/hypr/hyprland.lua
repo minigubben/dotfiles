@@ -261,6 +261,7 @@ hl.device({
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 local lockCommand = "$HOME/.config/sway/lock.sh"
 local screenshotCommand = "mkdir -p \"$HOME/Pictures/Screenshots\" && file=\"$HOME/Pictures/Screenshots/screenshot-$(date +%Y-%m-%d_%H-%M-%S).png\" && grim -g \"$(slurp)\" \"$file\" && wl-copy --type image/png < \"$file\""
+local cycleLayoutCommand = [[sh -c 'layout=$(hyprctl getoption general:layout 2>/dev/null | awk "/str:/ { print \$2; exit }"); case "$layout" in dwindle) next=master ;; master) next=scrolling ;; *) next=dwindle ;; esac; hyprctl eval "hl.config({ general = { layout = \"$next\" }})"' ]]
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
@@ -271,6 +272,7 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(cycleLayoutCommand))
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(lockCommand))
 hl.bind("Print", hl.dsp.exec_cmd(screenshotCommand))
