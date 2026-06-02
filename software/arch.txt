@@ -1,0 +1,14 @@
+# Arch-only package names and packages not shared by every distro.
+qt5-wayland
+qt6-wayland
+hyprlauncher
+brave:brave-bin
+networkmanager
+network-manager-applet
+bluez-utils
+pipewire-pulse
+aur:swaylock-effects
+ttf-dejavu
+noto-fonts
+inter-font
+ttf-nerd-fonts-symbols

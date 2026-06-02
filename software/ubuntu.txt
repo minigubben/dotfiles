@@ -1,0 +1,14 @@
+# Ubuntu-only package names and packages not shared by every distro.
+gnupg
+qtwayland5
+qt6-wayland
+manual:hyprlauncher
+brave:brave-browser
+network-manager
+network-manager-gnome
+pipewire-pulse
+swaylock
+fonts-dejavu-core
+fonts-noto-core
+fonts-inter
+fonts-font-awesome

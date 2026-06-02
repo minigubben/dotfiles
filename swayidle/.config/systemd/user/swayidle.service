@@ -2,7 +2,7 @@
 Description=Idle manager with swaylock
 
 [Service]
-ExecStart=/usr/bin/swayidle -w timeout 300 %h/.config/sway/lock.sh timeout 600 'niri msg dpms off' resume 'niri msg dpms on' before-sleep %h/.config/sway/lock.sh
+ExecStart=/usr/bin/swayidle -w timeout 300 %h/.config/sway/lock.sh timeout 600 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' before-sleep %h/.config/sway/lock.sh
 Restart=always
 RestartSec=1
 

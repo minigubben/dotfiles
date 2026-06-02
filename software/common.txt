@@ -1,0 +1,24 @@
+# One package per line. Comments and blank lines are ignored.
+# Prefixes:
+# repo:<pkg>    install from the distro package manager
+# aur:<pkg>     install with yay or paru on Arch
+# brave:<pkg>   install Brave using the script's Brave handling
+# manual:<name> print a manual follow-up item
+stow
+git
+curl
+hyprland
+xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
+waybar
+kitty
+alacritty
+dolphin
+blueman
+wireplumber
+pamixer
+pavucontrol
+brightnessctl
+power-profiles-daemon
+swayidle
+manual:BlexMono Nerd Font
