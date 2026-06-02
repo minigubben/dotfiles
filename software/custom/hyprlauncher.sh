@@ -56,8 +56,6 @@ install_hyprlauncher_from_copr() {
     return 0
   fi
 
-  install_repo_package fedora dnf-plugins-core || true
-  sudo_cmd dnf copr enable -y nett00n/hyprland || return 1
   install_repo_package fedora hyprlauncher
 }
 

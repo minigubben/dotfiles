@@ -6,9 +6,9 @@ Personal Linux dotfiles for a Hyprland-based Wayland desktop. The repo uses GNU 
 
 - `bash/` - Bash startup files, PATH setup, `fnm`, `pnpm`, Starship, ble.sh, and small shell helpers.
 - `bin/` - User scripts installed into `~/.local/bin`, including `sgpt` and `installappimage`.
-- `hypr/` - Hyprland Lua config, custom layouts, keybindings, autostart, portal setup, and Brave workspace helper.
+- `hypr/` - Hyprland Lua config, Hyprlock config, custom layouts, keybindings, autostart, portal setup, and Brave workspace helper.
 - `swayidle/` - User systemd service for idle locking and DPMS.
-- `swaylock/` - Screenshot blur lock command for `swaylock-effects`.
+- `swaylock/` - Lock command wrapper. It prefers `hyprlock` and falls back to `swaylock`.
 - `waybar/` - Waybar config, styling, and audio device picker script.
 - `software/` - Common and distro-specific package manifests plus custom installers.
 - `stow-all.sh` - Stows all top-level config packages into `$HOME`.
@@ -22,7 +22,7 @@ Personal Linux dotfiles for a Hyprland-based Wayland desktop. The repo uses GNU 
 - Fedora/RHEL-like: Fedora, RHEL, CentOS, Rocky, AlmaLinux
 - Ubuntu/Debian-like: Ubuntu, Pop!_OS, Linux Mint, elementary, Zorin
 
-The desktop configuration expects a Wayland/Hyprland setup with tools such as Waybar, PipeWire/WirePlumber, NetworkManager, swayidle, swaylock, grim, slurp, wl-clipboard, brightnessctl, and a Nerd Font.
+The desktop configuration expects a Wayland/Hyprland setup with tools such as Waybar, PipeWire/WirePlumber, NetworkManager, swayidle, hyprlock or swaylock, grim, slurp, wl-clipboard, brightnessctl, and a Nerd Font.
 
 ## Install
 

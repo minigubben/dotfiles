@@ -392,6 +392,34 @@ install_custom_packages() {
   done
 }
 
+configure_custom_repositories() {
+  local distro="$1"
+  local installer package function_name
+  local -a packages
+
+  for installer in "${CUSTOM_INSTALLERS[@]}"; do
+    packages=()
+    while IFS= read -r package; do
+      [[ -z "$package" ]] && continue
+      packages+=("$package")
+    done <<< "${CUSTOM_PACKAGES[$installer]-}"
+
+    (( ${#packages[@]} > 0 )) || continue
+
+    if ! load_custom_installer "$installer"; then
+      warn "Skipping custom repository setup for $installer."
+      continue
+    fi
+
+    function_name="configure_${installer//-/_}_repositories"
+    if ! declare -F "$function_name" >/dev/null; then
+      continue
+    fi
+
+    "$function_name" "$distro" "${packages[@]}"
+  done
+}
+
 print_manual_items() {
   local item
 
@@ -487,6 +515,7 @@ main() {
   if ! (( DRY_RUN )); then
     ensure_package_manager "$distro"
   fi
+  configure_custom_repositories "$distro"
   refresh_repositories "$distro"
   install_repo_packages "$distro"
   install_custom_packages "$distro"

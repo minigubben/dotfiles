@@ -1,4 +1,6 @@
 # Fedora-only package names and packages not shared by every distro.
+hyprland-copr:nett00n/hyprland
+hyprlock
 qt5-qtwayland
 qt6-qtwayland
 tuned-ppd
@@ -8,7 +10,6 @@ network-manager-applet
 NetworkManager-tui
 bluez-tools
 pipewire-pulseaudio
-swaylock
 dejavu-sans-fonts
 google-noto-sans-fonts
 rsms-inter-fonts
