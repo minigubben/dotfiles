@@ -343,6 +343,12 @@ hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
 
+-- Reorder windows with mainMod + CTRL + arrow keys
+hl.bind(mainMod .. " + CTRL + left",  hl.dsp.window.swap({ direction = "left" }))
+hl.bind(mainMod .. " + CTRL + right", hl.dsp.window.swap({ direction = "right" }))
+hl.bind(mainMod .. " + CTRL + up",    hl.dsp.window.swap({ direction = "up" }))
+hl.bind(mainMod .. " + CTRL + down",  hl.dsp.window.swap({ direction = "down" }))
+
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
 for i = 1, 10 do

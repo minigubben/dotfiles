@@ -99,6 +99,7 @@ The Hyprland config is Lua-based and includes:
 - `SUPER+L` lock screen
 - `Print` area screenshot to `~/Pictures/Screenshots` and clipboard
 - `SUPER+T` cycle layouts: dwindle, master, scrolling, `lua:threecol`, `lua:threecolwide`
+- `SUPER+CTRL+arrow` reorder active window in that direction
 - `SUPER+1..0` switch workspaces
 - `SUPER+SHIFT+1..0` move active window to workspace
 - multimedia keys for volume, mic mute, brightness, and player control
