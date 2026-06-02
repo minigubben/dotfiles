@@ -1,10 +1,7 @@
 # Fedora-only package names and packages not shared by every distro.
 qt5-qtwayland
 qt6-qtwayland
-manual:hyprlauncher
-manual:starship
-manual:fnm
-manual:blesh
+tuned-ppd
 brave:brave-browser
 NetworkManager
 network-manager-applet
@@ -15,4 +12,3 @@ swaylock
 dejavu-sans-fonts
 google-noto-sans-fonts
 rsms-inter-fonts
-nerd-fonts-symbols

@@ -26,6 +26,9 @@ brightnessctl
 grim
 slurp
 wl-clipboard
-power-profiles-daemon
 swayidle
-manual:BlexMono Nerd Font
+blexmono:BlexMono
+hyprlauncher:hyprlauncher
+starship:starship
+fnm:fnm
+blesh:blesh

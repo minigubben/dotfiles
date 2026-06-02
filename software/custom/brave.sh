@@ -21,8 +21,14 @@ add_brave_rpm_repository() {
   log "Adding Brave rpm repository."
   install_repo_package fedora dnf-plugins-core || true
 
+  if [[ -r /etc/yum.repos.d/brave-browser.repo ]]; then
+    log "Brave rpm repository is already configured."
+    return 0
+  fi
+
   if ! sudo_cmd dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo; then
-    sudo_cmd dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+    warn "Failed to add Brave Fedora repository."
+    return 1
   fi
 
   sudo_cmd rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc

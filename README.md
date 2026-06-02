@@ -48,9 +48,9 @@ Useful installer options:
 ./install-software.sh --no-refresh
 ```
 
-On Arch, AUR packages are installed with `yay` or `paru` when available. Brave is handled by `software/custom/brave.sh`; use `--no-third-party` to skip adding Brave repositories or AUR packages.
+On Arch, AUR packages are installed with `yay` or `paru` when available. Brave, BlexMono Nerd Font, hyprlauncher, Starship, fnm, and ble.sh are handled by scripts in `software/custom/`; use `--no-third-party` to skip upstream downloads and external repositories.
 
-Manual follow-up items are printed at the end of the installer. The common package list currently includes `BlexMono Nerd Font` as a manual item.
+Manual follow-up items are printed at the end of the installer.
 
 ## Apply Dotfiles
 

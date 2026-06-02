@@ -1,11 +1,8 @@
 # Ubuntu-only package names and packages not shared by every distro.
 gnupg
-starship
-fnm
-blesh
 qtwayland5
 qt6-wayland
-manual:hyprlauncher
+power-profiles-daemon
 brave:brave-browser
 network-manager
 network-manager-gnome
