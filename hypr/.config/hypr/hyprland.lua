@@ -206,6 +206,49 @@ hl.config({
     },
 })
 
+-- Custom 3-column layout. Use as lua:threecol.
+hl.layout.register("threecol", {
+    recalculate = function(ctx)
+        local n = #ctx.targets
+        if n == 0 then
+            return
+        end
+
+        local cols = math.min(3, n)
+        local columns = {}
+        for i = 1, cols do
+            columns[i] = {}
+        end
+
+        for i, target in ipairs(ctx.targets) do
+            table.insert(columns[((i - 1) % cols) + 1], target)
+        end
+
+        local area = ctx.area
+        for col, targets in ipairs(columns) do
+            local column_area
+            if col == cols then
+                column_area = area
+            else
+                local remaining_cols = cols - col + 1
+                column_area = ctx:split(area, "left", 1 / remaining_cols)
+                area = ctx:split(area, "right", (remaining_cols - 1) / remaining_cols)
+            end
+
+            local row_area = column_area
+            for row, target in ipairs(targets) do
+                if row == #targets then
+                    target:place(row_area)
+                else
+                    local remaining_rows = #targets - row + 1
+                    target:place(ctx:split(row_area, "top", 1 / remaining_rows))
+                    row_area = ctx:split(row_area, "bottom", (remaining_rows - 1) / remaining_rows)
+                end
+            end
+        end
+    end,
+})
+
 ----------------
 ----  MISC  ----
 ----------------
@@ -261,7 +304,7 @@ hl.device({
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 local lockCommand = "$HOME/.config/sway/lock.sh"
 local screenshotCommand = "mkdir -p \"$HOME/Pictures/Screenshots\" && file=\"$HOME/Pictures/Screenshots/screenshot-$(date +%Y-%m-%d_%H-%M-%S).png\" && grim -g \"$(slurp)\" \"$file\" && wl-copy --type image/png < \"$file\""
-local cycleLayoutCommand = [[sh -c 'layout=$(hyprctl getoption general:layout 2>/dev/null | awk "/str:/ { print \$2; exit }"); case "$layout" in dwindle) next=master ;; master) next=scrolling ;; *) next=dwindle ;; esac; hyprctl eval "hl.config({ general = { layout = \"$next\" }})"' ]]
+local cycleLayoutCommand = [[sh -c 'layout=$(hyprctl getoption general:layout 2>/dev/null | awk "/str:/ { print \$2; exit }"); case "$layout" in dwindle) next=master ;; master) next=scrolling ;; scrolling) next="lua:threecol" ;; *) next=dwindle ;; esac; hyprctl eval "hl.config({ general = { layout = \"$next\" }})"' ]]
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
