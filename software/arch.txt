@@ -1,4 +1,6 @@
 # Arch-only package names and packages not shared by every distro.
+starship
+fnm
 qt5-wayland
 qt6-wayland
 hyprlauncher
@@ -8,6 +10,7 @@ network-manager-applet
 bluez-utils
 pipewire-pulse
 aur:swaylock-effects
+aur:blesh-git
 ttf-dejavu
 noto-fonts
 inter-font

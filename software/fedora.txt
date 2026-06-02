@@ -2,6 +2,9 @@
 qt5-qtwayland
 qt6-qtwayland
 manual:hyprlauncher
+manual:starship
+manual:fnm
+manual:blesh
 brave:brave-browser
 NetworkManager
 network-manager-applet

@@ -8,6 +8,9 @@ stow
 git
 curl
 python3
+bash
+bash-completion
+pnpm
 hyprland
 xdg-desktop-portal-hyprland
 xdg-desktop-portal-gtk
