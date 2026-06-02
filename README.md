@@ -5,10 +5,10 @@ Personal Linux dotfiles for a Hyprland-based Wayland desktop. The repo uses GNU 
 ## Contents
 
 - `bash/` - Bash startup files, PATH setup, `fnm`, `pnpm`, Starship, ble.sh, and small shell helpers.
-- `bin/` - User scripts installed into `~/.local/bin`, including `sgpt` and `installappimage`.
+- `bin/` - User scripts installed into `~/.local/bin`, including `lock-screen`, `sgpt`, and `installappimage`.
 - `hypr/` - Hyprland Lua config, Hyprlock config, custom layouts, keybindings, autostart, portal setup, and Brave workspace helper.
 - `swayidle/` - User systemd service for idle locking and DPMS.
-- `swaylock/` - Lock command wrapper. It prefers `hyprlock` and falls back to `swaylock`.
+- `swaylock/` - Compatibility shim for older `~/.config/sway/lock.sh` callers.
 - `waybar/` - Waybar config, styling, and audio device picker script.
 - `software/` - Common and distro-specific package manifests plus custom installers.
 - `stow-all.sh` - Stows all top-level config packages into `$HOME`.
@@ -114,7 +114,7 @@ After stowing `swayidle/`, enable the idle service if desired:
 systemctl --user enable --now swayidle.service
 ```
 
-The service locks after 5 minutes, turns displays off after 10 minutes, and locks before sleep.
+The service locks after 5 minutes, turns displays off after 10 minutes, and asks logind to lock the session before sleep.
 
 ## Package Manifests
 

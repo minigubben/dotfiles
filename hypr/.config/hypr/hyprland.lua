@@ -319,7 +319,7 @@ hl.device({
 ---------------------
 
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
-local lockCommand = "$HOME/.config/sway/lock.sh"
+local lockCommand = "$HOME/.local/bin/lock-screen"
 local screenshotCommand = "mkdir -p \"$HOME/Pictures/Screenshots\" && file=\"$HOME/Pictures/Screenshots/screenshot-$(date +%Y-%m-%d_%H-%M-%S).png\" && grim -g \"$(slurp)\" \"$file\" && wl-copy --type image/png < \"$file\""
 local cycleLayoutCommand = [[sh -c 'layout=$(hyprctl getoption general:layout 2>/dev/null | awk "/str:/ { print \$2; exit }"); case "$layout" in dwindle) next=master ;; master) next=scrolling ;; scrolling) next="lua:threecol" ;; lua:threecol) next="lua:threecolwide" ;; *) next=dwindle ;; esac; hyprctl eval "hl.config({ general = { layout = \"$next\" }})"' ]]
 

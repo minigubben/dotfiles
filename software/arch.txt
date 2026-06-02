@@ -2,6 +2,7 @@
 qt5-wayland
 qt6-wayland
 power-profiles-daemon
+hyprlock
 brave:brave-bin
 networkmanager
 network-manager-applet
