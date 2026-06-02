@@ -218,9 +218,9 @@ hl.config({
 hl.config({
     input = {
         kb_layout  = "us",
-        kb_variant = "",
-        kb_model   = "",
-        kb_options = "",
+        kb_variant = "altgr-intl",
+        kb_model   = "microsoftpro",
+        kb_options = "terminate:ctrl_alt_bksp",
         kb_rules   = "",
 
         follow_mouse = 1,
