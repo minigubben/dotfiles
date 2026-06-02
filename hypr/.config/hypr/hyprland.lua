@@ -32,6 +32,7 @@ local terminal    = "kitty"
 local fileManager = "dolphin"
 local menu        = "hyprlauncher"
 local portalSetupCommand = "dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP && systemctl --user restart xdg-desktop-portal xdg-desktop-portal-hyprland xdg-desktop-portal-gtk"
+local braveWorkspaceWatcher = "$HOME/.config/hypr/scripts/keep-brave-workspace1.sh"
 
 
 -------------------
@@ -47,6 +48,7 @@ hl.on("hyprland.start", function ()
   hl.exec_cmd(portalSetupCommand)
   hl.exec_cmd("waybar")
   hl.exec_cmd("[workspace 1 silent] brave")
+  hl.exec_cmd(braveWorkspaceWatcher)
   hl.exec_cmd("nm-applet --indicator")
 end)
 
