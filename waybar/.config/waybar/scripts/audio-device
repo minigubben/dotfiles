@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mode="${1:-menu}"
+
+notify() {
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send "Audio device" "$1"
+  fi
+}
+
+open_fallback() {
+  if command -v pavucontrol >/dev/null 2>&1; then
+    pavucontrol >/dev/null 2>&1 &
+    exit 0
+  fi
+
+  notify "Install fuzzel, wofi, rofi, bemenu, tofi, or pavucontrol."
+  exit 1
+}
+
+pick() {
+  local prompt="$1"
+  local choices="$2"
+
+  if command -v fuzzel >/dev/null 2>&1; then
+    printf '%s\n' "$choices" | fuzzel --dmenu --prompt "$prompt> "
+  elif command -v wofi >/dev/null 2>&1; then
+    printf '%s\n' "$choices" | wofi --dmenu --prompt "$prompt"
+  elif command -v rofi >/dev/null 2>&1; then
+    printf '%s\n' "$choices" | rofi -dmenu -p "$prompt"
+  elif command -v bemenu >/dev/null 2>&1; then
+    printf '%s\n' "$choices" | bemenu -p "$prompt"
+  elif command -v tofi >/dev/null 2>&1; then
+    printf '%s\n' "$choices" | tofi --prompt-text "$prompt: "
+  else
+    open_fallback
+  fi
+}
+
+device_type() {
+  case "$1" in
+    output | sink)
+      printf 'sink'
+      ;;
+    input | source)
+      printf 'source'
+      ;;
+    *)
+      notify "Unknown mode: $1"
+      exit 2
+      ;;
+  esac
+}
+
+list_devices() {
+  local kind="$1"
+  local list_name="${kind}s"
+  local default_device
+
+  if ! default_device="$(pactl "get-default-$kind" 2>/dev/null)"; then
+    notify "Could not connect to PulseAudio/PipeWire."
+    exit 1
+  fi
+
+  pactl list "$list_name" | awk -v default_device="$default_device" -v kind="$kind" '
+    BEGIN { RS = ""; FS = "\n" }
+    {
+      name = ""
+      description = ""
+
+      for (i = 1; i <= NF; i++) {
+        line = $i
+        sub(/^[[:space:]]+/, "", line)
+
+        if (line ~ /^Name: /) {
+          name = line
+          sub(/^Name: /, "", name)
+        }
+
+        if (line ~ /^Description: /) {
+          description = line
+          sub(/^Description: /, "", description)
+        }
+      }
+
+      if (name == "") {
+        next
+      }
+
+      if (kind == "source" && name ~ /\.monitor$/) {
+        next
+      }
+
+      if (description == "") {
+        description = name
+      }
+
+      marker = name == default_device ? "*" : " "
+      printf "%s %s\t%s\n", marker, description, name
+    }
+  '
+}
+
+move_streams() {
+  local kind="$1"
+  local device="$2"
+  local streams stream
+
+  if [[ "$kind" == "sink" ]]; then
+    streams="$(pactl list short sink-inputs 2>/dev/null | cut -f1 || true)"
+    while IFS= read -r stream; do
+      [[ -n "$stream" ]] && pactl move-sink-input "$stream" "$device" >/dev/null 2>&1 || true
+    done <<< "$streams"
+  else
+    streams="$(pactl list short source-outputs 2>/dev/null | cut -f1 || true)"
+    while IFS= read -r stream; do
+      [[ -n "$stream" ]] && pactl move-source-output "$stream" "$device" >/dev/null 2>&1 || true
+    done <<< "$streams"
+  fi
+}
+
+choose_device() {
+  local kind="$1"
+  local label="$2"
+  local choices selected device description
+
+  choices="$(list_devices "$kind")"
+  if [[ -z "$choices" ]]; then
+    notify "No $label devices found."
+    exit 1
+  fi
+
+  selected="$(pick "$label" "$choices" || true)"
+  [[ -z "$selected" || "$selected" != *$'\t'* ]] && exit 0
+
+  device="${selected##*$'\t'}"
+  description="${selected%%$'\t'*}"
+  description="${description#? }"
+
+  pactl "set-default-$kind" "$device"
+  move_streams "$kind" "$device"
+  notify "Default $label: $description"
+}
+
+choose_menu() {
+  local choices selected action
+
+  choices=$'Output devices\toutput\nInput devices\tinput'
+  selected="$(pick "Audio" "$choices" || true)"
+  [[ -z "$selected" || "$selected" != *$'\t'* ]] && exit 0
+
+  action="${selected##*$'\t'}"
+  choose_device "$(device_type "$action")" "$action"
+}
+
+if ! command -v pactl >/dev/null 2>&1; then
+  notify "pactl is required for device selection."
+  open_fallback
+fi
+
+case "$mode" in
+  menu)
+    choose_menu
+    ;;
+  output | sink)
+    choose_device "sink" "output"
+    ;;
+  input | source)
+    choose_device "source" "input"
+    ;;
+  *)
+    choose_device "$(device_type "$mode")" "$mode"
+    ;;
+esac
