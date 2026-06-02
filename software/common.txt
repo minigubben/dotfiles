@@ -2,8 +2,8 @@
 # Prefixes:
 # repo:<pkg>    install from the distro package manager
 # aur:<pkg>     install with yay or paru on Arch
-# brave:<pkg>   install Brave using the script's Brave handling
 # manual:<name> print a manual follow-up item
+# <name>:<pkg>  install using software/custom/<name>.sh, for example brave:<pkg>
 stow
 git
 curl

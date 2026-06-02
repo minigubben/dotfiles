@@ -4,6 +4,7 @@ set -uo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 SOFTWARE_DIR="$SCRIPT_DIR/software"
 COMMON_FILE="$SOFTWARE_DIR/common.txt"
+CUSTOM_INSTALL_DIR="$SOFTWARE_DIR/custom"
 
 DRY_RUN=0
 SKIP_REFRESH=0
@@ -13,15 +14,17 @@ DISTRO_OVERRIDE=""
 
 declare -a REPO_PACKAGES=()
 declare -a AUR_PACKAGES=()
-declare -a BRAVE_PACKAGES=()
+declare -a CUSTOM_INSTALLERS=()
 declare -a MANUAL_ITEMS=()
 declare -a WARNINGS=()
+declare -A CUSTOM_PACKAGES=()
 
 usage() {
   cat <<EOF
 Usage: $0 [options]
 
 Installs software listed in software/common.txt plus the distro-specific list.
+Custom prefixes such as brave:<pkg> load software/custom/<prefix>.sh.
 
 Options:
   --software-dir PATH  Read common.txt and distro lists from a different directory.
@@ -168,6 +171,7 @@ read_package_file() {
 
 add_package() {
   local package="$1"
+  local prefix value
 
   case "$package" in
     repo:*)
@@ -176,11 +180,13 @@ add_package() {
     aur:*)
       add_unique AUR_PACKAGES "${package#aur:}"
       ;;
-    brave:*)
-      add_unique BRAVE_PACKAGES "${package#brave:}"
-      ;;
     manual:*)
       add_unique MANUAL_ITEMS "${package#manual:}"
+      ;;
+    *:*)
+      prefix="${package%%:*}"
+      value="${package#*:}"
+      add_custom_package "$prefix" "$value"
       ;;
     *)
       add_unique REPO_PACKAGES "$package"
@@ -188,8 +194,30 @@ add_package() {
   esac
 }
 
+add_custom_package() {
+  local installer="$1"
+  local package="$2"
+  local existing
+
+  [[ -z "$package" || "$package" == "-" ]] && return
+
+  if [[ ! "$installer" =~ ^[A-Za-z0-9_][A-Za-z0-9_-]*$ ]]; then
+    warn "Ignoring custom package with invalid installer name: $installer:$package"
+    return
+  fi
+
+  add_unique CUSTOM_INSTALLERS "$installer"
+
+  while IFS= read -r existing; do
+    [[ "$existing" == "$package" ]] && return
+  done <<< "${CUSTOM_PACKAGES[$installer]-}"
+
+  CUSTOM_PACKAGES["$installer"]="${CUSTOM_PACKAGES[$installer]-}${package}"$'\n'
+}
+
 print_resolved_list() {
   local distro="$1"
+  local installer package
 
   printf 'Distro family: %s\n' "$distro"
   printf 'Common package list: %s\n' "$COMMON_FILE"
@@ -197,8 +225,17 @@ print_resolved_list() {
 
   printf 'Repository packages:\n'
   printf '  %s\n' "${REPO_PACKAGES[@]:-none}"
-  printf '\nBrave packages:\n'
-  printf '  %s\n' "${BRAVE_PACKAGES[@]:-none}"
+  printf '\nCustom packages:\n'
+  if (( ${#CUSTOM_INSTALLERS[@]} == 0 )); then
+    printf '  none\n'
+  else
+    for installer in "${CUSTOM_INSTALLERS[@]}"; do
+      while IFS= read -r package; do
+        [[ -z "$package" ]] && continue
+        printf '  %s:%s\n' "$installer" "$package"
+      done <<< "${CUSTOM_PACKAGES[$installer]-}"
+    done
+  fi
   printf '\nAUR packages:\n'
   printf '  %s\n' "${AUR_PACKAGES[@]:-none}"
   printf '\nManual items:\n'
@@ -313,68 +350,46 @@ install_aur_packages() {
   done
 }
 
-install_brave_ubuntu() {
-  log "Adding Brave apt repository."
-  sudo_cmd install -d -m 0755 /etc/apt/keyrings
+load_custom_installer() {
+  local installer="$1"
+  local installer_file="$CUSTOM_INSTALL_DIR/$installer.sh"
 
-  if (( DRY_RUN )); then
-    printf '+ curl -fsS https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg | sudo tee /etc/apt/keyrings/brave-browser-archive-keyring.gpg >/dev/null\n'
-    printf '+ echo "deb [signed-by=/etc/apt/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list >/dev/null\n'
-  else
-    curl -fsS https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg \
-      | sudo tee /etc/apt/keyrings/brave-browser-archive-keyring.gpg >/dev/null
-    echo "deb [signed-by=/etc/apt/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" \
-      | sudo tee /etc/apt/sources.list.d/brave-browser-release.list >/dev/null
+  if [[ ! -r "$installer_file" ]]; then
+    warn "Cannot read custom installer for $installer: $installer_file"
+    return 1
   fi
 
-  sudo_cmd apt-get update
-  sudo_cmd apt-get install -y brave-browser
+  # shellcheck source=/dev/null
+  . "$installer_file"
 }
 
-install_brave_fedora() {
-  log "Adding Brave rpm repository."
-  install_repo_package fedora dnf-plugins-core || true
-
-  if ! sudo_cmd dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo; then
-    sudo_cmd dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
-  fi
-
-  sudo_cmd rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
-  sudo_cmd dnf install -y brave-browser
-}
-
-install_brave_packages() {
+install_custom_packages() {
   local distro="$1"
-  local package
+  local installer package function_name
+  local -a packages
 
-  (( ${#BRAVE_PACKAGES[@]} > 0 )) || return
+  for installer in "${CUSTOM_INSTALLERS[@]}"; do
+    packages=()
+    while IFS= read -r package; do
+      [[ -z "$package" ]] && continue
+      packages+=("$package")
+    done <<< "${CUSTOM_PACKAGES[$installer]-}"
 
-  if ! (( INSTALL_THIRD_PARTY )); then
-    for package in "${BRAVE_PACKAGES[@]}"; do
-      warn "Skipping third-party Brave package because --no-third-party was used: $package"
-    done
-    return
-  fi
+    (( ${#packages[@]} > 0 )) || continue
 
-  case "$distro" in
-    arch)
-      for package in "${BRAVE_PACKAGES[@]}"; do
-        if ! install_aur_package "$package"; then
-          warn "Failed to install Brave AUR package: $package"
-        fi
-      done
-      ;;
-    fedora)
-      if ! install_brave_fedora; then
-        warn "Failed to install Brave from its Fedora repository."
-      fi
-      ;;
-    ubuntu)
-      if ! install_brave_ubuntu; then
-        warn "Failed to install Brave from its Ubuntu repository."
-      fi
-      ;;
-  esac
+    if ! load_custom_installer "$installer"; then
+      warn "Skipping custom packages for $installer."
+      continue
+    fi
+
+    function_name="install_${installer//-/_}_packages"
+    if ! declare -F "$function_name" >/dev/null; then
+      warn "Custom installer $CUSTOM_INSTALL_DIR/$installer.sh does not define $function_name."
+      continue
+    fi
+
+    "$function_name" "$distro" "${packages[@]}"
+  done
 }
 
 print_manual_items() {
@@ -408,6 +423,7 @@ main() {
         [[ $# -ge 2 ]] || { printf '--software-dir requires a path.\n' >&2; exit 1; }
         SOFTWARE_DIR="$2"
         COMMON_FILE="$SOFTWARE_DIR/common.txt"
+        CUSTOM_INSTALL_DIR="$SOFTWARE_DIR/custom"
         shift 2
         ;;
       --distro)
@@ -473,7 +489,7 @@ main() {
   fi
   refresh_repositories "$distro"
   install_repo_packages "$distro"
-  install_brave_packages "$distro"
+  install_custom_packages "$distro"
   install_aur_packages "$distro"
   print_manual_items
   print_warnings
