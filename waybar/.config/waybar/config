@@ -78,9 +78,9 @@
       "headset": "󰋎",
       "hands-free": "󰋎"
     },
-    "tooltip-format": "{desc}\nLeft: choose output/input\nMiddle: choose input\nRight: mute",
+    "tooltip-format": "{desc}\nLeft/Middle: choose device\nRight: mute",
     "on-click": "$HOME/.config/waybar/scripts/audio-device menu",
-    "on-click-middle": "$HOME/.config/waybar/scripts/audio-device input",
+    "on-click-middle": "$HOME/.config/waybar/scripts/audio-device menu",
     "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
     "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
     "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%"
