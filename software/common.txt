@@ -19,6 +19,9 @@ wireplumber
 pamixer
 pavucontrol
 brightnessctl
+grim
+slurp
+wl-clipboard
 power-profiles-daemon
 swayidle
 manual:BlexMono Nerd Font
