@@ -2,6 +2,7 @@
 
 configure_hyprland_copr_repositories() {
   local distro="$1"
+  local copr
   shift
 
   [[ "$distro" == "fedora" ]] || return 0
@@ -12,7 +13,9 @@ configure_hyprland_copr_repositories() {
   fi
 
   install_repo_package fedora dnf-plugins-core || true
-  sudo_cmd dnf copr enable -y nett00n/hyprland
+  for copr in "$@"; do
+    sudo_cmd dnf copr enable -y "$copr"
+  done
 }
 
 install_hyprland_copr_packages() {

@@ -1,5 +1,5 @@
 # Fedora-only package names and packages not shared by every distro.
-hyprland-copr:nett00n/hyprland
+hyprland-copr:lionheartp/Hyprland
 hyprlock
 qt5-qtwayland
 qt6-qtwayland

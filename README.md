@@ -91,7 +91,11 @@ SGPT_API_URL=https://opencode.ai/zen/v1/responses
 
 ## Hyprland Notes
 
-The Hyprland config is Lua-based and includes:
+The Hyprland config is Lua-based and requires Hyprland 0.55 or newer. Hyprland
+0.54.x and older only recognize the legacy `hyprland.conf` format and will
+ignore `~/.config/hypr/hyprland.lua`.
+
+The config includes:
 
 - `SUPER+Q` terminal (`kitty`)
 - `SUPER+E` file manager (`dolphin`)
