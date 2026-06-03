@@ -1,0 +1,58 @@
+#!/bin/sh
+set -eu
+
+action=${1:-}
+slot=${2:-}
+slots_per_monitor=5
+
+case "$action" in
+  switch|move) ;;
+  *)
+    printf 'usage: %s switch|move 1-5\n' "$0" >&2
+    exit 2
+    ;;
+esac
+
+case "$slot" in
+  [1-5]) ;;
+  *)
+    printf 'slot must be between 1 and 5\n' >&2
+    exit 2
+    ;;
+esac
+
+monitor_name=$(
+  hyprctl monitors -j 2>/dev/null |
+    jq -r '.[] | select(.focused) | .name' |
+    head -n 1
+)
+
+if [ -z "$monitor_name" ]; then
+  printf 'could not determine focused Hyprland monitor\n' >&2
+  exit 1
+fi
+
+monitor_index=$(
+  hyprctl monitors -j 2>/dev/null |
+    jq --arg name "$monitor_name" '
+      sort_by(.x, .y, .name)
+      | map(.name)
+      | index($name)
+    '
+)
+
+if [ "$monitor_index" = "null" ] || [ -z "$monitor_index" ]; then
+  printf 'could not determine focused Hyprland monitor index\n' >&2
+  exit 1
+fi
+
+workspace=$((monitor_index * slots_per_monitor + slot))
+
+case "$action" in
+  switch)
+    hyprctl dispatch "hl.dsp.focus({ workspace = $workspace })"
+    ;;
+  move)
+    hyprctl dispatch "hl.dsp.window.move({ workspace = $workspace })"
+    ;;
+esac

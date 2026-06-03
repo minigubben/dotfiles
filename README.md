@@ -104,8 +104,8 @@ The config includes:
 - `Print` area screenshot to `~/Pictures/Screenshots` and clipboard
 - `SUPER+T` cycle layouts: dwindle, master, scrolling, `lua:threecol`, `lua:threecolwide`
 - `SUPER+CTRL+arrow` reorder active window in that direction
-- `SUPER+1..0` switch workspaces
-- `SUPER+SHIFT+1..0` move active window to workspace
+- `SUPER+1..5` switch the focused monitor's local workspace slots
+- `SUPER+SHIFT+1..5` move active window to the focused monitor's local workspace slot
 - multimedia keys for volume, mic mute, brightness, and player control
 
 Hyprland autostarts Waybar, Brave on workspace 1, a Brave workspace watcher, `nm-applet`, and restarts the relevant xdg-desktop-portal services.

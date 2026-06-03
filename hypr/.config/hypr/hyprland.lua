@@ -320,6 +320,7 @@ hl.device({
 
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 local lockCommand = "$HOME/.local/bin/lock-screen"
+local workspaceSlotCommand = "$HOME/.config/hypr/scripts/workspace-slot"
 local screenshotCommand = "mkdir -p \"$HOME/Pictures/Screenshots\" && file=\"$HOME/Pictures/Screenshots/screenshot-$(date +%Y-%m-%d_%H-%M-%S).png\" && grim -g \"$(slurp)\" \"$file\" && wl-copy --type image/png < \"$file\""
 local cycleLayoutCommand = [[sh -c 'layout=$(hyprctl getoption general:layout 2>/dev/null | awk "/str:/ { print \$2; exit }"); case "$layout" in dwindle) next=master ;; master) next=scrolling ;; scrolling) next="lua:threecol" ;; lua:threecol) next="lua:threecolwide" ;; *) next=dwindle ;; esac; hyprctl eval "hl.config({ general = { layout = \"$next\" }})"' ]]
 
@@ -349,12 +350,11 @@ hl.bind(mainMod .. " + CTRL + right", hl.dsp.window.swap({ direction = "right" }
 hl.bind(mainMod .. " + CTRL + up",    hl.dsp.window.swap({ direction = "up" }))
 hl.bind(mainMod .. " + CTRL + down",  hl.dsp.window.swap({ direction = "down" }))
 
--- Switch workspaces with mainMod + [0-9]
--- Move active window to a workspace with mainMod + SHIFT + [0-9]
-for i = 1, 10 do
-    local key = i % 10 -- 10 maps to key 0
-    hl.bind(mainMod .. " + " .. key,             hl.dsp.focus({ workspace = i}))
-    hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i }))
+-- Switch the current monitor's local workspaces with mainMod + [1-5]
+-- Move active window to the current monitor's local workspace with mainMod + SHIFT + [1-5]
+for i = 1, 5 do
+    hl.bind(mainMod .. " + " .. i,         hl.dsp.exec_cmd(workspaceSlotCommand .. " switch " .. i))
+    hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.exec_cmd(workspaceSlotCommand .. " move " .. i))
 end
 
 -- Example special workspace (scratchpad)
