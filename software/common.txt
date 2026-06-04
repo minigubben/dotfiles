@@ -33,3 +33,4 @@ hyprlauncher:hyprlauncher
 starship:starship
 fnm:fnm
 blesh:blesh
+mdtopdf:vendor-mdtopdf

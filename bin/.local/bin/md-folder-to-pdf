@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_path="${BASH_SOURCE[0]}"
+if command -v readlink >/dev/null 2>&1; then
+  resolved_path="$(readlink -f -- "$script_path" 2>/dev/null || true)"
+  if [[ -n "$resolved_path" ]]; then
+    script_path="$resolved_path"
+  fi
+fi
+
+script_dir="$(cd -- "$(dirname -- "$script_path")" && pwd)"
+repo_dir="$(cd -- "$script_dir/../../.." && pwd)"
+tool_dir="$repo_dir/vendor/mdToPdf"
+
+if [[ ! -f "$tool_dir/bin/md-folder-to-pdf.mjs" ]]; then
+  printf 'mdToPdf tool was not found at %s\n' "$tool_dir" >&2
+  exit 1
+fi
+
+if [[ ! -d "$tool_dir/node_modules" ]]; then
+  printf 'mdToPdf dependencies are not installed. Run:\n' >&2
+  printf '  cd %q && pnpm install\n' "$tool_dir" >&2
+  exit 1
+fi
+
+export PUPPETEER_CACHE_DIR="${PUPPETEER_CACHE_DIR:-$tool_dir/.cache/puppeteer}"
+
+exec node "$tool_dir/bin/md-folder-to-pdf.mjs" "$@"

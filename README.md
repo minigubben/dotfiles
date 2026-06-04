@@ -11,6 +11,7 @@ Personal Linux dotfiles for a Hyprland-based Wayland desktop. The repo uses GNU 
 - `swaylock/` - Compatibility shim for older `~/.config/sway/lock.sh` callers.
 - `waybar/` - Waybar config, styling, and audio device picker script.
 - `software/` - Common and distro-specific package manifests plus custom installers.
+- `vendor/` - Separated third-party or personal tools kept inside this repo but excluded from Stow.
 - `stow-all.sh` - Stows all top-level config packages into `$HOME`.
 - `install-software.sh` - Installs the packages listed in `software/`.
 
@@ -66,13 +67,25 @@ Apply the dotfiles into your home directory:
 ./stow-all.sh
 ```
 
-The script stows every top-level directory except `.git` and `software`. To stow into a different target:
+The script stows every top-level directory except `.git`, `software`, and `vendor`. To stow into a different target:
 
 ```sh
 ./stow-all.sh --target /path/to/target
 ```
 
 If Stow reports conflicts, move or back up the existing files first, then rerun the command.
+
+## Vendored Tools
+
+`vendor/mdToPdf` contains the `md-folder-to-pdf` Node/pnpm tool copied from `../utveckling_git/mdToPdf`. Stowable wrappers are installed as `~/.local/bin/md-folder-to-pdf` and `~/.local/bin/md-to-pdf`.
+
+The main installer installs its pnpm dependencies and Puppeteer browser cache. To refresh them manually:
+
+```sh
+cd vendor/mdToPdf
+pnpm install
+PUPPETEER_CACHE_DIR="$PWD/.cache/puppeteer" node node_modules/.pnpm/puppeteer@24.37.2/node_modules/puppeteer/install.mjs
+```
 
 ## Optional Environment
 

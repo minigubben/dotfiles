@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") <file.md>
+
+Converts one Markdown file to a PDF in the same directory.
+EOF
+}
+
+if [[ $# -ne 1 || "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  usage
+  if [[ $# -eq 1 ]]; then
+    exit 0
+  fi
+  exit 1
+fi
+
+input_file="$1"
+
+if [[ ! -f "$input_file" ]]; then
+  printf 'Markdown file does not exist: %s\n' "$input_file" >&2
+  exit 1
+fi
+
+case "${input_file,,}" in
+  *.md|*.markdown)
+    ;;
+  *)
+    printf 'Expected a .md or .markdown file: %s\n' "$input_file" >&2
+    exit 1
+    ;;
+esac
+
+script_path="${BASH_SOURCE[0]}"
+if command -v readlink >/dev/null 2>&1; then
+  resolved_path="$(readlink -f -- "$script_path" 2>/dev/null || true)"
+  if [[ -n "$resolved_path" ]]; then
+    script_path="$resolved_path"
+  fi
+fi
+
+script_dir="$(cd -- "$(dirname -- "$script_path")" && pwd)"
+repo_dir="$(cd -- "$script_dir/../../.." && pwd)"
+tool_dir="$repo_dir/vendor/mdToPdf"
+converter="$repo_dir/bin/.local/bin/md-folder-to-pdf"
+
+if [[ ! -x "$converter" ]]; then
+  printf 'md-folder-to-pdf wrapper was not found at %s\n' "$converter" >&2
+  exit 1
+fi
+
+input_dir="$(cd -- "$(dirname -- "$input_file")" && pwd)"
+input_name="$(basename -- "$input_file")"
+pattern="$(node -e 'console.log(process.argv[1].replace(/[\\*?[\]{}()!+@]/g, "\\\\$&"))' "$input_name")"
+
+export PUPPETEER_CACHE_DIR="${PUPPETEER_CACHE_DIR:-$tool_dir/.cache/puppeteer}"
+
+exec "$converter" --input "$input_dir" --output "$input_dir" --no-recursive --pattern "$pattern"

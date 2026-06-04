@@ -1,0 +1,23 @@
+{
+  "name": "md-folder-to-pdf",
+  "version": "1.0.0",
+  "description": "CLI tool to convert markdown files in a folder to PDFs",
+  "type": "module",
+  "bin": {
+    "md-folder-to-pdf": "bin/md-folder-to-pdf.mjs"
+  },
+  "scripts": {
+    "convert": "node ./bin/md-folder-to-pdf.mjs"
+  },
+  "keywords": [
+    "markdown",
+    "pdf",
+    "cli"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "fast-glob": "^3.3.3",
+    "md-to-pdf": "^5.2.4",
+    "mermaid": "^11.14.0"
+  }
+}

@@ -76,6 +76,7 @@ done < <(
   find "$SCRIPT_DIR" -mindepth 1 -maxdepth 1 -type d \
     ! -name '.git' \
     ! -name 'software' \
+    ! -name 'vendor' \
     -print0 | sort -z
 )
 
