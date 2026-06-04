@@ -22,6 +22,17 @@ hl.monitor({
     scale    = "auto",
 })
 
+-- Machine-local overrides live here and are ignored by git.
+local home = os.getenv("HOME")
+if home then
+    local local_config = home .. "/.config/hypr/local/init.lua"
+    local local_file = io.open(local_config, "r")
+    if local_file then
+        local_file:close()
+        dofile(local_config)
+    end
+end
+
 
 ---------------------
 ---- MY PROGRAMS ----
