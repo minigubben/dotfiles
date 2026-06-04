@@ -2,7 +2,7 @@
 Description=Idle manager with lock-screen wrapper
 
 [Service]
-ExecStart=/usr/bin/swayidle -w timeout 300 %h/.local/bin/lock-screen timeout 600 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' lock %h/.local/bin/lock-screen before-sleep 'loginctl lock-session'
+ExecStart=/usr/bin/swayidle timeout 300 %h/.local/bin/lock-screen timeout 600 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' lock %h/.local/bin/lock-screen before-sleep 'loginctl lock-session'
 Restart=always
 RestartSec=1
 
