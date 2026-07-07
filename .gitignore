@@ -1,3 +1,4 @@
 .env
 /hypr/.config/hypr/local/*.conf
 /hypr/.config/hypr/local/*.lua
+/sway/.config/sway/local.conf
