@@ -145,3 +145,10 @@ Supported prefixes:
 - `<name>:<pkg>` - install through `software/custom/<name>.sh`
 
 Unprefixed package names are treated as repository packages.
+
+
+.local/bin/still is redistributed from:
+https://github.com/faergeek/still
+
+Licensed under the MIT License.
+See licenses/still-LICENSE.

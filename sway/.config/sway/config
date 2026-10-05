@@ -211,7 +211,10 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Custom
-for_window [title="^Picture in Picture$"] floating enable, sticky enable, border none, resize set 480 270 px, move absolute position 955 px 685 px, opacity 0.8  
+for_window [title="(?i)^picture in picture$"] floating enable, sticky enable, border none, resize set 480 270 px, move absolute position 955 px 685 px, opacity 0.8
+bindsym $mod+Shift+m resize set width 50 ppt
+bindsym $mod+Shift+n resize set width 25 ppt
+
 
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d
@@ -241,3 +244,5 @@ input "1133:16531:Logitech_PRO_X" {
     pointer_accel 1
     accel_profile "flat"
 }
+
+bindsym $mod+Shift+r floating enable, resize set 1471 960

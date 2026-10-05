@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+file="${XDG_SCREENSHOTS_DIR:-${XDG_PICTURES_DIR:-$HOME/Pictures}/Screenshots}/$(date +'%Y-%m-%d_%H-%M-%S').png"
+
+mkdir -p "$(dirname "$file")"
+
+still -c 'slurp | grim -g- -' | tee "$file" | wl-copy

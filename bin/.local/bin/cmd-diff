@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: $0 <command> [arguments...]"
+    exit 1
+fi
+
+before=$(mktemp)
+after=$(mktemp)
+
+trap 'rm -f "$before" "$after"' EXIT
+
+echo "Running: $*"
+"$@" > "$before" 2>&1
+
+echo
+echo "Press any key to run again..."
+read -rsn1
+
+echo
+echo "Running again..."
+"$@" > "$after" 2>&1
+
+echo
+echo "Difference:"
+diff -u "$before" "$after"
