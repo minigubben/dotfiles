@@ -211,18 +211,14 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Custom
-<<<<<<< HEAD
 for_window [title="(?i)^picture in picture$"] floating enable, sticky enable, border none, resize set 480 270 px, move absolute position 955 px 685 px, opacity 0.8
+
 bindsym $mod+Shift+m resize set width 50 ppt
 bindsym $mod+Shift+n resize set width 25 ppt
-
-=======
-for_window [title="^Picture in Picture$"] floating enable, sticky enable, border none, resize set 480 270 px, move absolute position 955 px 685 px, opacity 0.8  
 bindsym $mod+l exec loginctl lock-session
 
-  # Machine-specific overrides, not tracked in dotfiles
+# Machine-specific overrides, not tracked in dotfiles
 include ~/.config/sway/local.conf
->>>>>>> refs/remotes/origin/main
 
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d
@@ -254,3 +250,6 @@ input "1133:16531:Logitech_PRO_X" {
 }
 
 bindsym $mod+Shift+r floating enable, resize set 1471 960
+
+bindsym $mod+comma opacity minus 0.1
+bindsym $mod+period opacity plus 0.1
